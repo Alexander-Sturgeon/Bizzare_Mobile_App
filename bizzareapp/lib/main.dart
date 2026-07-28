@@ -3,8 +3,13 @@ import 'package:flutter/material.dart';
 import "./core/app_colors.dart";
 import "./core/app_themes.dart";
 //VIEWS
-import "/views/splash_screen.dart";
-// import '/views/login_page.dart';
+import 'package:bizzareapp/views/create_listing_page.dart';
+import 'package:bizzareapp/views/details_page.dart';
+import 'package:bizzareapp/views/list_view_page.dart';
+import 'package:bizzareapp/views/login_page.dart';
+import 'package:bizzareapp/views/profile_page.dart';
+import 'package:bizzareapp/views/splash_screen.dart';
+import 'package:bizzareapp/views/update_listing_page.dart';
 
 //Main Entry
 void main() {
@@ -22,7 +27,12 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (context) => SplashScreen(),
-        // '/loginPage': (context) => LoginPage(),
+        '/loginPage': (context) => LoginPage(),
+        '/listView': (context) => ListViewPage(),
+        '/detailsPage': (context) => DetailsPage(),
+        '/profilePage': (context) => ProfilePage(),
+        '/createListing': (context) => CreateListingPage(),
+        '/updateListing': (context) => UpdateListingPage(),
       },
     );
   }
