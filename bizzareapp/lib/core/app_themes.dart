@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'app_colors.dart';
 
-//THIS IS ONLY A TEMPLATE CHANGE!!!!!!
 class AppTheme {
   static ThemeData get lightTheme {
     return ThemeData(
@@ -27,6 +26,19 @@ class AppTheme {
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.primary,
           foregroundColor: Colors.white,
+        ),
+      ),
+      //Outlined text fields, grey by default and teal once focused.
+      inputDecorationTheme: InputDecorationTheme(
+        labelStyle: TextStyle(color: AppColors.textSecondary),
+        border: OutlineInputBorder(
+          borderSide: BorderSide(color: AppColors.border),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: AppColors.border),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: AppColors.primary),
         ),
       ),
     );
