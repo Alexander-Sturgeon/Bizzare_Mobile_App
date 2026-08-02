@@ -49,7 +49,7 @@ class SplashScreenState extends State<SplashScreen>
             );
           },
           //Placeholder imagename
-          child: Image.asset('assets/images/WSD.png', width: 150),
+          child: Image.asset('assets/images/placeholderListingImage.jpg', width: 150),
         ),
       ),
     );

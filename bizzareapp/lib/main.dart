@@ -10,6 +10,10 @@ import 'package:bizzareapp/views/login_page.dart';
 import 'package:bizzareapp/views/profile_page.dart';
 import 'package:bizzareapp/views/splash_screen.dart';
 import 'package:bizzareapp/views/update_listing_page.dart';
+//PROVIDER
+import 'package:provider/provider.dart';
+import 'package:bizzareapp/providers/loginstate_provider.dart';
+
 
 //Main Entry
 void main() {
@@ -19,13 +23,15 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'TaskPro',
-      theme: AppTheme.lightTheme,
-      // home: SplashScreen(), using named routes instead.
-      initialRoute: '/',
-      routes: {
+    return ChangeNotifierProvider(
+      create: (context) => LoginStateProvider(),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Bizzare',
+        theme: AppTheme.lightTheme, // use the global theme
+        // home: SplashScreen(),
+        initialRoute: '/',
+        routes: {
         '/': (context) => SplashScreen(),
         '/loginPage': (context) => LoginPage(),
         '/listView': (context) => ListViewPage(),
@@ -34,6 +40,7 @@ class MyApp extends StatelessWidget {
         '/createListing': (context) => CreateListingPage(),
         '/updateListing': (context) => UpdateListingPage(),
       },
+      ),
     );
   }
 }
