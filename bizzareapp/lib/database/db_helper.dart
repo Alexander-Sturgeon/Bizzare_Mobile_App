@@ -3,11 +3,11 @@ import 'package:sqflite/sqflite.dart';
 import 'package:bizzareapp/models/db_result.dart';
 
 class DBHelper {
-  static final DBHelper dbListing = DBHelper._init();
+  static final DBHelper dbListing = DBHelper._init(); 
 
   static Database? _database;
 
-  DBHelper._init();
+  DBHelper._init(); 
 
   Future<Database> get listingDatabase async {
     if (_database != null) return _database!;
@@ -57,4 +57,22 @@ class DBHelper {
       )
       ''');
   }
+
+    Future<DBResult> readAllListing() async {
+    final db = await dbListing.listingDatabase;
+
+    try {
+      List<Map<String, dynamic>> listings = await db.query('listings');
+
+      if (listings.isNotEmpty) {
+        return DBResult(isSuccess: true, message: 'Listings retrieved successfully.', listingList: listings);
+      } else {
+        return DBResult(isSuccess: false, message: 'No listing found.', listingList: listings);
+      }
+    } catch (e) {
+      return DBResult(isSuccess: false, message: "Error: $e", listingList: []);
+    }
+  }
+
+
 }

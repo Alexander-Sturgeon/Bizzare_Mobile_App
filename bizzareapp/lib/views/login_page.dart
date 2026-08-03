@@ -84,9 +84,6 @@ class LoginPageState extends State<LoginPage> {
               child: Text('Login',),       
               ),
           ),
-
-
-
         ],),
       ),
     );
