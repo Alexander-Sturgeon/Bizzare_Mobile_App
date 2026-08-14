@@ -74,5 +74,46 @@ class DBHelper {
     }
   }
 
+//deletelisting that accesses the db with parameterized inputs to avoid sqli attacks, and returns a message depending on whether deletion was successful or not. 
+Future<DBResult> deleteListing(int id) async {
+      final db = await dbListing.listingDatabase;
+      try{
+        int rowsDeleted = await db.delete(
+          'listings',
+          where: 'listingId=?',
+          whereArgs: [id],
+        );
+
+        if(rowsDeleted>0){
+          return DBResult(isSuccess: true,message: "Listing Deleted Successfully", listingList:[]);
+        }
+        else{
+          return DBResult(isSuccess: false,message: "No Matching Record Found", listingList: []);
+        }
+      }catch(e){
+        return DBResult(isSuccess: false,message: "Error: $e", listingList: []);//returns if there is an issue encountered during deletion
+      }
+    }
+
+    //structurely identical to the deleteListing db method, except the db.update method is invoked here instead of the delete. DBResult sent back in case of success or failure. 
+    Future<DBResult> updateListing(int id, Map<String, dynamic> listingDetailsRow) async {
+      final db = await dbListing.listingDatabase;
+      try{
+        int rowsAffected = await db.update(
+          'listings',
+          listingDetailsRow,
+          where: 'listingId=?',
+          whereArgs: [id],
+        );
+        if(rowsAffected>0){
+          return DBResult(isSuccess: true, message: "Listing Updated Successfully", listingList: []);
+        }else {
+          return DBResult(isSuccess: false, message: "No Matching Record Found", listingList: []);
+        }
+      }catch(e){
+        return DBResult(isSuccess: false, message: "Error: $e", listingList: []); 
+      }
+    }
+
 
 }
