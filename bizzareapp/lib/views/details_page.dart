@@ -16,7 +16,7 @@ class DetailsPageState extends State<DetailsPage> {
   static const String placeholderImage =
       'assets/images/placeholderListingImage.jpg';
 
-  // Seller details for now.
+  //Seller details for now.
   static const String sellerName = 'User12345';
   static const String sellerRating = '4.9';
   static const String sellerSales = '(42 sales)';
@@ -30,12 +30,12 @@ class DetailsPageState extends State<DetailsPage> {
   String address = '';
   bool prefilled = false;
 
-  // Stores the address lookup result.
+  //Stores the address lookup result.
   Future<LatLng?>? coordinates;
 
   bool showFullDescription = false;
 
-  // Loads listing data from the previous page.
+  //Loads listing data from the previous page.
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -62,7 +62,7 @@ class DetailsPageState extends State<DetailsPage> {
     super.dispose();
   }
 
-  // Converts the address into map coordinates.
+  //Converts the address into map coordinates.
   Future<LatLng?> resolveAddress(String address) async {
     if (address.isEmpty) return null;
 
@@ -71,12 +71,12 @@ class DetailsPageState extends State<DetailsPage> {
       if (locations.isEmpty) return null;
       return LatLng(locations.first.latitude, locations.first.longitude);
     } catch (e) {
-      // Returns null if the address cannot be found.
+      //Returns null if the address cannot be found.
       return null;
     }
   }
 
-  // Shows loading, error, or the map.
+  //Shows loading, error, or the map.
   Widget buildMap(BuildContext context, AsyncSnapshot<LatLng?> snapshot) {
     if (snapshot.connectionState == ConnectionState.waiting) {
       return Center(child: CircularProgressIndicator());
@@ -109,7 +109,7 @@ class DetailsPageState extends State<DetailsPage> {
     );
   }
 
-  // Toggles the description length.
+  //Toggles the description length.
   void _toggleDescription() {
     setState(() {
       showFullDescription = !showFullDescription;
@@ -155,7 +155,7 @@ class DetailsPageState extends State<DetailsPage> {
           ),
         ),
         actions: [
-          // UI buttons for future actions.
+          //Buttons for future actions.
           IconButton(
             icon: Icon(Icons.share, color: primaryColor),
             onPressed: () {},
@@ -261,8 +261,7 @@ class DetailsPageState extends State<DetailsPage> {
                   ),
                 ),
                 SizedBox(height: 20),
-
-                // Seller information.
+                //Seller information.
                 Row(
                   children: [
                     Container(
@@ -314,7 +313,6 @@ class DetailsPageState extends State<DetailsPage> {
                   ],
                 ),
                 SizedBox(height: 20),
-
                 // Keeps the map at a fixed height.
                 ClipRRect(
                   borderRadius: BorderRadius.circular(6),
@@ -370,8 +368,9 @@ class DetailsPageState extends State<DetailsPage> {
                     ),
                   ),
                 ),
+                //Just needed some padding -Alex
                 SizedBox(height: 10),
-                // Buy button is just avisual for now.
+                //Buy button is just avisual for now.
                 SizedBox(
                   height: 52,
                   child: ElevatedButton(
