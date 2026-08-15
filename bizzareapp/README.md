@@ -1,17 +1,12 @@
 # bizzareapp
 
-A new Flutter project.
+This is a market place app. Proof of Concept or MVP. It allows a user to login and add listings, inspect listings, edit listings, and delete listings. 
 
-## Getting Started
+The login is just stubbed in so to login username is 'user' and password is 'password'.
+The google map functionality works if you add your own GOOGLE API key.
 
-This project is a starting point for a Flutter application.
+The profile page was scrapped due to scope. We got to ambitions for such a little amount of time to work on this app with all the other courses we had on the go.  
 
-A few resources to get you started if this is your first Flutter project:
+Created by Alexander Sturgeon, Kenneth Barclay, Gurkirat Singh, and Revienne Gulang
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
