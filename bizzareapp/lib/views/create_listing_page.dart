@@ -4,6 +4,7 @@ import 'package:bizzareapp/widgets/bottom_nav.dart';
 import 'package:bizzareapp/core/app_colors.dart';
 import 'package:bizzareapp/database/db_helper.dart';
 import 'package:bizzareapp/models/db_result.dart';
+import 'package:geocoding/geocoding.dart';
 
 class CreateListingPage extends StatelessWidget {
   CreateListingPage({super.key});
@@ -34,6 +35,7 @@ class CreateListingPage extends StatelessWidget {
     ),
     'category': FormControl<String>(validators: [Validators.required]),
     'condition': FormControl<String>(validators: [Validators.required]),
+    'address': FormControl<String>(validators: [Validators.required]),
   });
 
   @override
@@ -144,6 +146,12 @@ class CreateListingPage extends StatelessWidget {
                     )
                     .toList(),
               ),
+              SizedBox(height: 10),
+              ReactiveTextField(
+                key: const Key('Address'),
+                formControlName: 'address',
+                decoration: InputDecoration(labelText: 'Address'),
+              ),
               SizedBox(height: 30),
               SizedBox(
                 height: 50,
@@ -173,30 +181,43 @@ class CreateListingPage extends StatelessWidget {
       control.updateValueAndValidity();
     });
 
-    if (frmListing.valid) {
-      //The keys have to match the column names in the listings table.
-      final Map<String, dynamic> newListing = {
-        'title': frmListing.control('title').value,
-        'description': frmListing.control('description').value,
-        'price': double.parse(frmListing.control('price').value),
-        'category': frmListing.control('category').value,
-        'condition': frmListing.control('condition').value,
-        'image': placeholderImage,
-      };
+    if (!frmListing.valid) return;
 
-      final DBResult result = await DBHelper.dbListing.insertListing(
-        newListing,
-      );
+    final String address = frmListing.control('address').value;
 
+    //  Using geocoding to verify the address
+    try {
+      final locations = await Geocoding().locationFromAddress(address);
+      if (locations.isEmpty) throw Exception('No match found');
+    } catch (e) {
       if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Unable to find address. Try again')),
+      );
+      return;
+    }
 
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(result.message)));
+    //The keys have to match the column names in the listings table.
+    final Map<String, dynamic> newListing = {
+      'title': frmListing.control('title').value,
+      'description': frmListing.control('description').value,
+      'price': double.parse(frmListing.control('price').value),
+      'category': frmListing.control('category').value,
+      'condition': frmListing.control('condition').value,
+      'image': placeholderImage,
+      'address': address,
+    };
 
-      if (result.isSuccess) {
-        Navigator.pushReplacementNamed(context, '/listView');
-      }
+    final DBResult result = await DBHelper.dbListing.insertListing(newListing);
+
+    if (!context.mounted) return;
+
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(result.message)));
+
+    if (result.isSuccess) {
+      Navigator.pushReplacementNamed(context, '/listView');
     }
   }
 }

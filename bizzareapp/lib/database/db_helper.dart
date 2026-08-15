@@ -54,7 +54,8 @@ class DBHelper {
       price REAL,
       category TEXT,
       condition TEXT,
-      image TEXT
+      image TEXT,
+      address TEXT
       )
       ''');
   }

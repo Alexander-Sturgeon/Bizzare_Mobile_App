@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:bizzareapp/core/app_colors.dart';
 
 class DetailsPage extends StatefulWidget {
@@ -15,27 +16,26 @@ class DetailsPageState extends State<DetailsPage> {
   static const String placeholderImage =
       'assets/images/placeholderListingImage.jpg';
 
-  // Just using some fake listing info for now. as we are not implementing a
-  // geolocator
-  static const double listingLatitude = 49.282730;
-  static const double listingLongitude = -123.120735;
-  static const String listingLocation = 'Vancouver, BC';
-  static const String listingAddress = '433 Robston St Vancouver, BC, V6B 6L9';
+  // Seller details for now.
   static const String sellerName = 'User12345';
   static const String sellerRating = '4.9';
   static const String sellerSales = '(42 sales)';
 
   GoogleMapController? mapController;
-  final Set<Marker> _markers = {};
 
+  Map<String, dynamic> listingArgs = {};
   String title = '';
   String description = '';
   String price = '';
+  String address = '';
   bool prefilled = false;
+
+  // Stores the address lookup result.
+  Future<LatLng?>? coordinates;
 
   bool showFullDescription = false;
 
-  // Gets the listing info passed from the previous page.
+  // Loads listing data from the previous page.
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -45,34 +45,91 @@ class DetailsPageState extends State<DetailsPage> {
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>?;
 
     setState(() {
+      listingArgs = args ?? {};
       title = args?['title'] ?? 'No Title';
       description = args?['description'] ?? 'No Description';
       price = (args?['price'] as num?)?.toDouble().toString() ?? 'N/A';
+      address = args?['address'] ?? '';
+      coordinates = resolveAddress(address);
     });
 
     prefilled = true;
   }
 
-  // Add the marker once the map is ready.
-  void _onMapCreated(GoogleMapController controller) {
-    mapController = controller;
-
-    setState(() {
-      _markers.add(
-        Marker(
-          markerId: MarkerId("Listing Location"),
-          position: LatLng(listingLatitude, listingLongitude),
-          infoWindow: InfoWindow(title: title),
-        ),
-      );
-    });
+  @override
+  void dispose() {
+    mapController?.dispose();
+    super.dispose();
   }
 
-  // Switches between the short and full description.
+  // Converts the address into map coordinates.
+  Future<LatLng?> resolveAddress(String address) async {
+    if (address.isEmpty) return null;
+
+    try {
+      final locations = await Geocoding().locationFromAddress(address);
+      if (locations.isEmpty) return null;
+      return LatLng(locations.first.latitude, locations.first.longitude);
+    } catch (e) {
+      // Returns null if the address cannot be found.
+      return null;
+    }
+  }
+
+  // Shows loading, error, or the map.
+  Widget buildMap(BuildContext context, AsyncSnapshot<LatLng?> snapshot) {
+    if (snapshot.connectionState == ConnectionState.waiting) {
+      return Center(child: CircularProgressIndicator());
+    }
+
+    final position = snapshot.data;
+
+    if (position == null) {
+      return Container(
+        color: AppColors.surface,
+        alignment: Alignment.center,
+        child: Text(
+          'Location unavailable',
+          style: TextStyle(color: AppColors.textSecondary),
+        ),
+      );
+    }
+
+    return GoogleMap(
+      initialCameraPosition: CameraPosition(target: position, zoom: 14.0),
+      onMapCreated: (controller) => mapController = controller,
+      // Adds the listing location marker.
+      markers: {
+        Marker(
+          markerId: MarkerId("Listing Location"),
+          position: position,
+          infoWindow: InfoWindow(title: title),
+        ),
+      },
+    );
+  }
+
+  // Toggles the description length.
   void _toggleDescription() {
     setState(() {
       showFullDescription = !showFullDescription;
     });
+  }
+
+  Future<void> onUpdate() async {
+    final update_Result = await Navigator.pushNamed(
+      context,
+      '/updateListing',
+      arguments: listingArgs,
+    );
+
+    if (!mounted) {
+      return;
+    }
+
+    if (update_Result == true) {
+      Navigator.pop(context, true);
+    }
   }
 
   @override
@@ -98,7 +155,7 @@ class DetailsPageState extends State<DetailsPage> {
           ),
         ),
         actions: [
-          // These buttons are just for the UI right now.
+          // UI buttons for future actions.
           IconButton(
             icon: Icon(Icons.share, color: primaryColor),
             onPressed: () {},
@@ -139,8 +196,9 @@ class DetailsPageState extends State<DetailsPage> {
                       ),
                       SizedBox(height: 4),
                       Text(
-                        listingLocation,
+                        address.isEmpty ? 'No location provided' : address,
                         style: TextStyle(color: Colors.white, fontSize: 14),
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ],
                   ),
@@ -204,7 +262,7 @@ class DetailsPageState extends State<DetailsPage> {
                 ),
                 SizedBox(height: 20),
 
-                // Seller info is hardcoded for now.
+                // Seller information.
                 Row(
                   children: [
                     Container(
@@ -257,19 +315,15 @@ class DetailsPageState extends State<DetailsPage> {
                 ),
                 SizedBox(height: 20),
 
-                // The SizedBox gives the map a fixed height inside the ListView.
+                // Keeps the map at a fixed height.
                 ClipRRect(
                   borderRadius: BorderRadius.circular(6),
                   child: SizedBox(
                     height: 180,
                     width: double.infinity,
-                    child: GoogleMap(
-                      initialCameraPosition: CameraPosition(
-                        target: LatLng(listingLatitude, listingLongitude),
-                        zoom: 14.0,
-                      ),
-                      onMapCreated: _onMapCreated,
-                      markers: _markers,
+                    child: FutureBuilder<LatLng?>(
+                      future: coordinates,
+                      builder: buildMap,
                     ),
                   ),
                 ),
@@ -284,7 +338,7 @@ class DetailsPageState extends State<DetailsPage> {
                     SizedBox(width: 8),
                     Expanded(
                       child: Text(
-                        listingAddress,
+                        address.isEmpty ? 'No address provided' : address,
                         style: TextStyle(
                           color: primaryColor,
                           fontSize: 15,
@@ -296,7 +350,26 @@ class DetailsPageState extends State<DetailsPage> {
                 ),
                 SizedBox(height: 24),
 
-                // Buy button is only visual for now.
+                SizedBox(height: 12),
+                SizedBox(
+                  height: 52,
+                  child: ElevatedButton(
+                    onPressed: onUpdate,
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: primaryColor,
+                      side: BorderSide(color: Colors.white, width: 2),
+                      shape: StadiumBorder(),
+                    ),
+                    child: Text(
+                      'Edit Listing',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+                // Buy button is just avisual for now.
                 SizedBox(
                   height: 52,
                   child: ElevatedButton(

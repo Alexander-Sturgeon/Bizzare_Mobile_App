@@ -134,11 +134,17 @@ class ListViewPageState extends State<ListViewPage> {
                       final listing = visibleListings[index];
 
                       return InkWell(
-                        onTap: () => Navigator.pushNamed(
-                          context,
-                          '/detailsPage',
-                          arguments: listing,
-                        ),
+                        onTap: () async {
+                          final edited = await Navigator.pushNamed(
+                            context,
+                            '/detailsPage',
+                            arguments: listing,
+                          );
+
+                          if (edited == true) {
+                            fetchListings();
+                          }
+                        },
                         child: Card(
                           margin: EdgeInsets.symmetric(
                             horizontal: 16,
