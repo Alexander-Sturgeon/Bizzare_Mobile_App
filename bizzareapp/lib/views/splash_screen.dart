@@ -49,7 +49,10 @@ class SplashScreenState extends State<SplashScreen>
             );
           },
           //Placeholder imagename
-          child: Image.asset('assets/images/placeholderListingImage.jpg', width: 150),
+          child: Image.asset(
+            'assets/images/LogoOfMarket.png',
+            width: 150,
+          ), //I just grabbed an image off google from png wing couldnt find author so this is the link https://www.pngwing.com/en/free-png-zdusq
         ),
       ),
     );

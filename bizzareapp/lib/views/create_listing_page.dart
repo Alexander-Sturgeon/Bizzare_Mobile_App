@@ -27,7 +27,10 @@ class CreateListingPage extends StatelessWidget {
     'title': FormControl<String>(validators: [Validators.required]),
     'description': FormControl<String>(validators: [Validators.required]),
     'price': FormControl<String>(
-      validators: [Validators.required, Validators.number()],
+      validators: [
+        Validators.required,
+        Validators.number(allowedDecimals: 2, allowNegatives: false),
+      ],
     ),
     'category': FormControl<String>(validators: [Validators.required]),
     'condition': FormControl<String>(validators: [Validators.required]),
@@ -41,7 +44,9 @@ class CreateListingPage extends StatelessWidget {
         backgroundColor: AppColors.background,
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: AppColors.primary),
-          onPressed: () => Navigator.pop(context),
+          //The bottom nav replaces the route instead of pushing, so there is
+          //no listings page under this one to pop back to.
+          onPressed: () => Navigator.pushReplacementNamed(context, '/listView'),
         ),
         title: Text(
           'New Listing',
@@ -190,7 +195,7 @@ class CreateListingPage extends StatelessWidget {
       ).showSnackBar(SnackBar(content: Text(result.message)));
 
       if (result.isSuccess) {
-        Navigator.pop(context, true);
+        Navigator.pushReplacementNamed(context, '/listView');
       }
     }
   }
