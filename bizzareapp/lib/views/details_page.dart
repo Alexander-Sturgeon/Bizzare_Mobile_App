@@ -356,8 +356,9 @@ class DetailsPageState extends State<DetailsPage> {
                   child: ElevatedButton(
                     onPressed: onUpdate,
                     style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
                       foregroundColor: primaryColor,
-                      side: BorderSide(color: Colors.white, width: 2),
+                      side: BorderSide(color: primaryColor, width: 2),
                       shape: StadiumBorder(),
                     ),
                     child: Text(
@@ -369,6 +370,7 @@ class DetailsPageState extends State<DetailsPage> {
                     ),
                   ),
                 ),
+                SizedBox(height: 10),
                 // Buy button is just avisual for now.
                 SizedBox(
                   height: 52,

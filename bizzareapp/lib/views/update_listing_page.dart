@@ -41,7 +41,10 @@ class UpdateListingPageState extends State<UpdateListingPage> {
     'title': FormControl<String>(validators: [Validators.required]),
     'description': FormControl<String>(validators: [Validators.required]),
     'price': FormControl<String>(
-      validators: [Validators.required, Validators.number()],
+      validators: [
+        Validators.required,
+        Validators.number(allowedDecimals: 2, allowNegatives: false),
+      ],
     ),
     'category': FormControl<String>(validators: [Validators.required]),
     'condition': FormControl<String>(validators: [Validators.required]),
