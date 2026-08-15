@@ -6,7 +6,6 @@ import 'package:bizzareapp/views/create_listing_page.dart';
 import 'package:bizzareapp/views/details_page.dart';
 import 'package:bizzareapp/views/list_view_page.dart';
 import 'package:bizzareapp/views/login_page.dart';
-import 'package:bizzareapp/views/profile_page.dart';
 import 'package:bizzareapp/views/splash_screen.dart';
 import 'package:bizzareapp/views/update_listing_page.dart';
 //PROVIDER
@@ -34,7 +33,6 @@ class MyApp extends StatelessWidget {
           '/loginPage': (context) => LoginPage(),
           '/listView': (context) => ListViewPage(),
           '/detailsPage': (context) => DetailsPage(),
-          '/profilePage': (context) => ProfilePage(),
           '/createListing': (context) => CreateListingPage(),
           '/updateListing': (context) => UpdateListingPage(),
         },
