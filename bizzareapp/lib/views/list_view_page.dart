@@ -63,7 +63,14 @@ class ListViewPageState extends State<ListViewPage> {
                     itemBuilder: (context, index) {
                       final listing = _listings[index];
 
-                      return Card(
+                    return InkWell(
+                          onTap: () => Navigator.pushNamed(
+                            context,
+                            '/detailsPage',
+                            arguments: listing,
+                          ),
+                          child: Card(
+                            
                       margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                       shadowColor: Colors.grey.shade400,
                       child: Padding(
@@ -120,7 +127,8 @@ class ListViewPageState extends State<ListViewPage> {
                           ],
                         ),
                       ),
-                    );
+                          ),
+                        );
                     },
                   )
                 : Center(child: Text('No listings available')),
