@@ -18,7 +18,6 @@ class BottomNavBar extends StatelessWidget {
         BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
         BottomNavigationBarItem(icon: Icon(Icons.search), label: "Search"),
         BottomNavigationBarItem(icon: Icon(Icons.attach_money), label: "Sell"),
-        BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profile"),
       ],
     );
   }
@@ -30,13 +29,18 @@ class BottomNavBar extends StatelessWidget {
       case 0:
         Navigator.pushReplacementNamed(context, "/listView");
         break;
+      case 1:
+        //Search passes the Listview a param instead of opening a new page, just
+        //less redundancy that way
+        Navigator.pushReplacementNamed(
+          context,
+          "/listView",
+          arguments: {'openSearch': true},
+        );
+        break;
       case 2:
         Navigator.pushReplacementNamed(context, "/createListing");
         break;
-      case 3:
-        Navigator.pushReplacementNamed(context, "/profilePage");
-        break;
     }
-    //case 1 (Search) has no route yet.
   }
 }

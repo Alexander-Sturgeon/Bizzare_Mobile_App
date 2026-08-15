@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 //CORE
-import "./core/app_colors.dart";
 import "./core/app_themes.dart";
 //VIEWS
 import 'package:bizzareapp/views/create_listing_page.dart';
@@ -13,7 +12,6 @@ import 'package:bizzareapp/views/update_listing_page.dart';
 //PROVIDER
 import 'package:provider/provider.dart';
 import 'package:bizzareapp/providers/loginstate_provider.dart';
-
 
 //Main Entry
 void main() {
@@ -32,14 +30,14 @@ class MyApp extends StatelessWidget {
         // home: SplashScreen(),
         initialRoute: '/',
         routes: {
-        '/': (context) => SplashScreen(),
-        '/loginPage': (context) => LoginPage(),
-        '/listView': (context) => ListViewPage(),
-        '/detailsPage': (context) => DetailsPage(),
-        '/profilePage': (context) => ProfilePage(),
-        '/createListing': (context) => CreateListingPage(),
-        '/updateListing': (context) => UpdateListingPage(),
-      },
+          '/': (context) => SplashScreen(),
+          '/loginPage': (context) => LoginPage(),
+          '/listView': (context) => ListViewPage(),
+          '/detailsPage': (context) => DetailsPage(),
+          '/profilePage': (context) => ProfilePage(),
+          '/createListing': (context) => CreateListingPage(),
+          '/updateListing': (context) => UpdateListingPage(),
+        },
       ),
     );
   }
